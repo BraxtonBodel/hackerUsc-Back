@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from backendUsc.models import Lenguaje, PruebaTecnica, PruebaTecnicaPregunta, PruebaTecnicaRespuesta
+from backendUsc.models import *
 
 class languageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,4 +31,13 @@ class respuestaSerializer(serializers.ModelSerializer):
         fields = ('idPruebaRespuesta',
                   'respuesta',
                   'idPregunta',
-                  'esValido')                  
+                  'esValido')
+
+class reservaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reserva
+        fields = ('idReserva',
+                  'fechaInicio',
+                  'usuarioReserva',
+                  'fechaFin',
+                  'cantidadPersonas')

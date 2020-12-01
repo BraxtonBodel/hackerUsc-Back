@@ -5,7 +5,7 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
  
-from backendUsc.models import Lenguaje, PruebaTecnica, PruebaTecnicaPregunta
+from backendUsc.models import Lenguaje, PruebaTecnica, PruebaTecnicaPregunta, Reserva, Usuario
 from backendUsc.serializers import *
 from rest_framework.decorators import api_view
 
@@ -47,4 +47,24 @@ def answerPerQuestion(request, pk):
         pregunta = PruebaTecnicaPregunta.objects.get(pk=pk)
         respuesta = pregunta.respuesta.all()
         hackerSerializer = respuestaSerializer(respuesta,many=True) 
-        return JsonResponse(hackerSerializer.data,safe=False)                 
+        return JsonResponse(hackerSerializer.data,safe=False)
+
+@api_view(['GET', 'POST', 'DELETE'])
+def insertTest(request ):
+    # GET list of backendUsc, POST a new tutorial, DELETE all backendUsc
+    testData = JSONParser().parse(request)
+    prueba_serializer = pruebaSerializer(data=testData)
+    if prueba_serializer.is_valid():
+        prueba_serializer.save()
+        return JsonResponse(prueba_serializer.data, status=status.HTTP_201_CREATED) 
+    return JsonResponse(prueba_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST', 'DELETE'])
+def getReservation(request, pk):
+    # GET list of backendUsc, POST a new tutorial, DELETE all backendUsc
+    # GET list of backendUsc, POST a new tutorial, DELETE all backendUsc
+    if request.method == 'GET':
+        usuario = Usuario.objects.get(pk=pk)
+        reserva = usuario.reserva.all()
+        hackerSerializer = reservaSerializer(reserva,many=True) 
+        return JsonResponse(hackerSerializer.data,safe=False)                
